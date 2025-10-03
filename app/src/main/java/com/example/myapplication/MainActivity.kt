@@ -23,33 +23,5 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val myThread = Thread {
-            for (i in 1..5) {
-                // Правильное использование TextView
-                runOnUiThread {
-                    findViewById<TextView>(R.id.TV).text =
-                        findViewById<TextView>(R.id.TV).text.toString() + "!!!!"
-                }
-                Thread.sleep(1000L)
-            }
-        }
-        myThread.start() // Не забудьте запустить поток!
-
-        var radioGroupInfo = findViewById<RadioGroup>(R.id.radioGroup)
-        var buttonCheck: Button = findViewById(R.id.checkButton)
-        buttonCheck.setOnClickListener {
-            val selectedId = radioGroupInfo.checkedRadioButtonId
-            if (selectedId == R.id.radioButton) {
-                Toast.makeText(this, "GOOD", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "BAD", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    fun onButtonClick (view: View) {
-        val textView = findViewById<TextView>(R.id.TV)
-        textView.setText(textView.text.toString() + "666")
-    }
+}
 }
