@@ -10,6 +10,7 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.LabeledIntent
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
@@ -33,24 +34,6 @@ import androidx.versionedparcelable.ParcelField
 import com.google.android.material.animation.AnimationUtils
 import java.io.Serializable
 
-data class User(val name: String, val age: Int) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readInt()
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeInt(age)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<User> {
-        override fun createFromParcel(parcel: Parcel): User = User(parcel)
-        override fun newArray(size: Int): Array<User?> = arrayOfNulls(size)
-    }
-}
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,26 +45,98 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        var resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Log.d("intent", "MESSAGE!!!")
-                    Toast.makeText(this, result.data?.getStringExtra("resultData"), Toast.LENGTH_LONG).show()
-            }
-        }
-        val buttonNext = findViewById<Button>(R.id.nextButton)
-        val intentElement = Intent(this, MainActivity2::class.java)
-        buttonNext.setOnClickListener {
-            val alesha = User("ALESHA", 12);
-            intentElement.putExtra("textViewText", "RESOURCE FROM 1 ACTIVITY")
-            intentElement.putExtra("classicalALESHA", alesha);
-            resultLauncher.launch(intentElement)
-        }
+        //1
         findViewById<Button>(R.id.button3).setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, "https://chat.deepseek.com/a/chat/s/965e8479-a45d-4b9a-9262-585a7f9b2f6e".toUri()))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://vk.com/audios536343293?section=all")));
         }
+        //2
         findViewById<Button>(R.id.button4).setOnClickListener {
-            startActivity(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+            val videoId = "dQw4w9WgXcQ"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId"))
+            startActivity(intent)
+        }
+        //3
+        findViewById<Button>(R.id.button5).setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+            }
+            startActivity(intent)
+        }
+        //4
+        findViewById<Button>(R.id.button6).setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+            }
+            val chooser = Intent.createChooser(intent, "Выберите приложение для открытия фото")
+            startActivity(chooser)
+        }
+        //5
+        findViewById<Button>(R.id.button7).setOnClickListener {
+            val phoneNumber = "+79161234567"
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
+            startActivity(intent)
+        }
+        //6
+        findViewById<Button>(R.id.button8).setOnClickListener {
+            val intent = Intent(Intent.ACTION_SET_WALLPAPER)
+            startActivity(Intent.createChooser(intent, "Выберите обои"))
+        }
+        fun logIntentInfo(name: String, intent: Intent) {
+            Log.d("INTENT", "🔹 $name")
+            Log.d("INTENT", "   Action: ${intent.action}")
+            Log.d("INTENT", "   Data: ${intent.data ?: "null"}")
+            Log.d("INTENT", "   Type: ${intent.type ?: "null"}")
+
+            val categories = intent.categories?.joinToString() ?: "null"
+            Log.d("INTENT", "   Categories: $categories")
+
+            val packages = packageManager.queryIntentActivities(intent, 0)
+            val appNames = packages.joinToString { it.loadLabel(packageManager).toString() }
+            Log.d("INTENT", "   Доступные приложения: $appNames")
+            Log.d("INTENT", "─".repeat(40))
+        }
+        //7
+        findViewById<Button>(R.id.button9).setOnClickListener {
+            Log.d("INTENT", "═".repeat(50))
+            Log.d("INTENT", "📱 СПИСОК INTENT ДЕЙСТВИЙ")
+            Log.d("INTENT", "═".repeat(50))
+
+            // 1. ACTION_VIEW - Веб
+            val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com"))
+            logIntentInfo("ACTION_VIEW - Веб-страница", webIntent)
+
+            // 2. ACTION_VIEW - Телефон
+            val phoneIntent = Intent(Intent.ACTION_VIEW, Uri.parse("tel:+79161234567"))
+            logIntentInfo("ACTION_VIEW - Телефон", phoneIntent)
+
+            // 3. ACTION_VIEW - Карты
+            val mapsIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:55.7558,37.6173"))
+            logIntentInfo("ACTION_VIEW - Карты", mapsIntent)
+
+            // 4. ACTION_VIEW - Email
+            val emailIntent = Intent(Intent.ACTION_VIEW, Uri.parse("mailto:test@example.com"))
+            logIntentInfo("ACTION_VIEW - Email", emailIntent)
+
+            // 5. ACTION_SEND - Текст
+            val sendTextIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, "Привет!")
+            }
+            logIntentInfo("ACTION_SEND - Текст", sendTextIntent)
+
+            // 6. ACTION_GET_CONTENT - Фото
+            val getContentIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+            }
+            logIntentInfo("ACTION_GET_CONTENT - Фото", getContentIntent)
+
+            // 7. ACTION_DIAL - Набор номера
+            val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+79161234567"))
+            logIntentInfo("ACTION_DIAL - Набор номера", dialIntent)
+
+            Log.d("INTENT", "═".repeat(50))
+            Toast.makeText(this, "Информация выведена в Logcat (INTENT)", Toast.LENGTH_SHORT).show()
+        }
         }
     }
-}
+

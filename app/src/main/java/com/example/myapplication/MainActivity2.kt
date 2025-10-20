@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -18,13 +19,6 @@ class MainActivity2 : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
-        findViewById<TextView>(R.id.textView3).text = intent.getStringExtra("textViewText")
-        findViewById<TextView>(R.id.textView4).text = intent.extras?.getParcelable<User>("classicalALESHA")!!.name
-        findViewById<Button>(R.id.button).setOnClickListener {
-            val returnIntent = Intent().putExtra("resultData", "Результат работы второго активити!\nВремя: ${System.currentTimeMillis()}")
-            setResult(RESULT_OK, returnIntent)
-            finish()
         }
     }
 
