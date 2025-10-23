@@ -46,4 +46,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.google.android.material:material:1.9.0")
+    implementation("com.airbnb.android:lottie:6.1.0")
+    implementation("com.daimajia.androidanimations:library:2.4@aar")
 }
